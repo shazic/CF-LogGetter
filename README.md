@@ -1,4 +1,4 @@
-<img src="cf-loggetter-logo.png" align="middle">
+<img src="/resource/images/cf-loggetter-logo.png" align="middle">
 
 # CF-LogGetter
 
