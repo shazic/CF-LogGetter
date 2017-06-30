@@ -1,6 +1,8 @@
+<img src="cf-loggetter-logo.png" align="middle">
+
 # CF-LogGetter
 
-Download, decompress and consolidate AWS CloudFront CDN logs into a single file on your Windows machine.
+Download, decompress and consolidate AWS CloudFront CDN logs into a human-readable single file on your Windows machine.
 
 ## PURPOSE                             
 
@@ -24,22 +26,22 @@ ___
                                                             
  > getcflog <websitename/s3-bucket-name> [cf-indicator]     
                                                             
- websitename:                                               
-              website for which cloudfront logs need to be  
-              downloaded. Use this if the bucket name of    
-              it's cloudfront logs are in the format        
-                   logs.websitename/cdn                     
-              otherwise use s3-bucket-name directly         
- s3-bucket-name:                                            
-              the name of the bucket where the cloudfront   
-              logs are stored.                              
+ ### websitename:                                               
+website for which cloudfront logs need to be downloaded. Use this if the bucket name of it's cloudfront logs are in the format  
+
+> logs.websitename/cdn  
+
+otherwise use **s3-bucket-name** directly.
+
+### s3-bucket-name:                                            
+the name of the bucket where the cloudfront logs are stored.                              
                                                             
- cf-indicator:                                              
-              set this to Y if using s3-bucket-name         
+### cf-indicator:                                              
+set this to Y if using s3-bucket-name.
 
 ___                                                            
 
 ## OUTPUT  
                                                             
- File:                                                      
-      cf-logs.D-yyyy-mm-dd-T_hh_mm_ss.txt                   
+The Output File would be generated with the following name format:                                                      
+      **cf-logs.D-yyyy-mm-dd-T_hh_mm_ss.txt**                   
