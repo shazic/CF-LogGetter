@@ -53,6 +53,7 @@
 @rem $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 @set errormessage=
+@call reseterrorlevel
 
 @rem Let's check if zero arguments were passed. If yes, then abort.
 @rem --------------------------------------------------------------
