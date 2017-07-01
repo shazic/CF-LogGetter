@@ -52,31 +52,62 @@
 @rem $$                                                             $$
 @rem $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
+@set errormessage=
+
+@rem Let's check if zero arguments were passed. If yes, then abort.
+@rem --------------------------------------------------------------
+@if '%1' == ''         @set errormessage="Syntax error. No arguments passed with command.   "
+@if '%1' == ''         @goto errormsg3
+ 
 @rem Let's set the timestamp:
 @rem ----------------------------
 @call settimestamp
 
+@if %ERRORLEVEL% NEQ 0 @set errormessage="Error generating timestamp.                       "
+@if %ERRORLEVEL% NEQ 0 @goto errormsg3
+
 @rem Let's set the name of the bucket that contains the cloudfront logs.
 @rem -------------------------------------------------------------------
-if '%2' == 'Y' set cf-bucket-name=%1
-if '%2' == 'y' set cf-bucket-name=%1
-if '%2' == '' set cf-bucket-name=logs.%1/cdn
-@echo %ts% %cf-bucket-name%
+@if '%2' == 'Y' @set cf-bucket-name=%1
+@if '%2' == 'y' @set cf-bucket-name=%1
+@if '%2' == '' @set cf-bucket-name=logs.%1/cdn
+@rem echo %ts% %cf-bucket-name%
 
 @rem download CloudFront logs.
 @rem --------------------------
 @set tempfolder=logs_%ts%
 @md %tempfolder%
+@if %ERRORLEVEL% NEQ 0 @set errormessage="Cannot create folder.                             "
+@if %ERRORLEVEL% NEQ 0 @goto errormsg3
+
 @aws s3 sync s3://%cf-bucket-name% %tempfolder%/
 
+@if %ERRORLEVEL% NEQ 0 @set errormessage="Error syncing with bucket.                        "
+@if %ERRORLEVEL% NEQ 0 @goto errormsg2
 
 @rem process CloudFront logs and create output file.
 @rem -----------------------------------------------
+
 @cd %tempfolder%
+@if %ERRORLEVEL% NEQ 0 set errormessage="Cannot change directory.                          "
+@if %ERRORLEVEL% NEQ 0 goto errormsg1
+
 @ren *.gz *.log.gz
+@if %ERRORLEVEL% NEQ 0 set errormessage="Unable to rename files.                           "
+@if %ERRORLEVEL% NEQ 0 goto errormsg1
+
 @gzip -d *.gz
+@if %ERRORLEVEL% NEQ 0 set errormessage="Problem executing gzip.                           "
+@if %ERRORLEVEL% NEQ 0 goto errormsg1
+
 @copy *.log cf-logs.%ts%.txt
+@if %ERRORLEVEL% NEQ 0 set errormessage="Unable to copy files.                             "
+@if %ERRORLEVEL% NEQ 0 goto errormsg1
+
 @del *.log
+@if %ERRORLEVEL% NEQ 0 set errormessage="Unable to delete files.                           "
+@if %ERRORLEVEL% NEQ 0 goto errormsg1
+
 @cd..
 
 
@@ -85,10 +116,40 @@ if '%2' == '' set cf-bucket-name=logs.%1/cdn
 @rem $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 @move %tempfolder%\cf-logs.%ts%.txt cf-logs.%ts%.txt
+@if %ERRORLEVEL% NEQ 0 set errormessage="Unable to move files.                             "
+@if %ERRORLEVEL% NEQ 0 goto errormsg2
 
 @rem $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 @rem delete the temporary folder.
-@rem -----------------------------------------------
+@rem ----------------------------
 @rmdir %tempfolder%
+@if %ERRORLEVEL% NEQ 0 set errormessage="Unable to delete directory.                       "
+@if %ERRORLEVEL% NEQ 0 goto errormsg
+
+@rem job finished. Time to rest!
+@rem ----------------------------
+goto endofjob
+
+:errormsg1
+@cd..
+
+:errormsg2
+@rmdir %tempfolder%
+
+:errormsg3
+@echo
+@echo $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+@echo $$                                                             $$
+@echo $$         Something bad happened. Aborting operation!         $$
+@echo $$                                                             $$
+@echo $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+@echo $$                                                             $$
+@echo $$ The following Error Message was generated:                  $$
+@echo $$                                                             $$
+@echo $$ %errormessage%        $$ 
+@echo $$                                                             $$
+@echo $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+:endofjob

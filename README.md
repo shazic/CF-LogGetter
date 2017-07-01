@@ -22,7 +22,7 @@ ___
 
 ## SYNTAX                                                             
                                                             
-On the DOS command prompt:  
+On the DOS command prompt type the following command:  
 
  > getcflog <websitename/s3-bucket-name> [cf-indicator]     
                                                             
@@ -45,5 +45,5 @@ ___
 
 ## OUTPUT  
                                                             
-The Output File would be generated with the following name format:                                                      
+The Output File would be generated in the same folder with the following name format:                                                      
       **cf-logs.D-yyyy-mm-dd-T_hh_mm_ss.txt**                   
