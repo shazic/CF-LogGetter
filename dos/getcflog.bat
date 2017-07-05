@@ -101,12 +101,20 @@
 @if %ERRORLEVEL% NEQ 0 set errormessage="Problem executing gzip.                           "
 @if %ERRORLEVEL% NEQ 0 goto errormsg1
 
-@copy *.log cf-logs.%ts%.txt
+@set tempfile=cf-logs.temp.%ts%.txt
+
+@copy *.log %tempfile%
 @if %ERRORLEVEL% NEQ 0 set errormessage="Unable to copy files.                             "
 @if %ERRORLEVEL% NEQ 0 goto errormsg1
 
 @del *.log
 @if %ERRORLEVEL% NEQ 0 set errormessage="Unable to delete files.                           "
+@if %ERRORLEVEL% NEQ 0 goto errormsg1
+
+@set ofile=cf-logs.%ts%.txt
+
+@call rmvhdrs %tempfile% %ofile%
+@if %ERRORLEVEL% NEQ 0 set errormessage="Unable to generate output file.                   "
 @if %ERRORLEVEL% NEQ 0 goto errormsg1
 
 @cd..
@@ -116,7 +124,7 @@
 @rem $$                          OUTPUT                             $$
 @rem $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
-@move %tempfolder%\cf-logs.%ts%.txt cf-logs.%ts%.txt
+@move %tempfolder%\%ofile% %ofile%
 @if %ERRORLEVEL% NEQ 0 set errormessage="Unable to move files.                             "
 @if %ERRORLEVEL% NEQ 0 goto errormsg2
 
