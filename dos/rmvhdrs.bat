@@ -33,4 +33,3 @@ FOR /F "usebackq delims=" %%a in (`"findstr /n ^^ %1"`) do (
     if "!frstsmbl!" NEQ "#" echo(!var! >> %2
     ENDLOCAL
 )
-)
