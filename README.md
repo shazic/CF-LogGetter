@@ -18,7 +18,7 @@ The following needs to be completed before using this cmd:
 2. AWS CLI and gzip must be installed.                         
 3. The path where _aws.exe_ and _gzip.exe_ are installed must be included in the PATH system variable.                    
 4. AWS configure must be run and the access keys and region must be set.                                           
-5. Copy the files _getcflog.bat_, _reseterrorlevel.bat_ and _settimestamp.bat_ from this git to the folder where you would like to generate the CloudFront log file.                                                
+5. Copy the files from the _dos_ folder of this git to the folder where you would like to generate the CloudFront log file.                                                
 
 ___                                                            
 

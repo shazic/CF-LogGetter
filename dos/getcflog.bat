@@ -52,6 +52,8 @@
 @rem $$                                                             $$
 @rem $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
+@echo off
+
 @set errormessage=
 @call reseterrorlevel
 
