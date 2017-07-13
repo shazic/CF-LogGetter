@@ -52,6 +52,8 @@
 @rem $$                                                             $$
 @rem $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
+@echo off
+
 @set errormessage=
 @call reseterrorlevel
 
@@ -101,7 +103,9 @@
 @if %ERRORLEVEL% NEQ 0 set errormessage="Problem executing gzip.                           "
 @if %ERRORLEVEL% NEQ 0 goto errormsg1
 
-@copy *.log cf-logs.%ts%.txt
+@set tempfile=cf-logs.temp.%ts%.txt
+
+@copy *.log %tempfile%
 @if %ERRORLEVEL% NEQ 0 set errormessage="Unable to copy files.                             "
 @if %ERRORLEVEL% NEQ 0 goto errormsg1
 
@@ -112,22 +116,34 @@
 @cd..
 
 
-@rem $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-@rem $$                          OUTPUT                             $$
-@rem $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-@move %tempfolder%\cf-logs.%ts%.txt cf-logs.%ts%.txt
+@move %tempfolder%\%tempfile% %tempfile%
 @if %ERRORLEVEL% NEQ 0 set errormessage="Unable to move files.                             "
 @if %ERRORLEVEL% NEQ 0 goto errormsg2
-
-@rem $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
 
 @rem delete the temporary folder.
 @rem ----------------------------
 @rmdir %tempfolder%
 @if %ERRORLEVEL% NEQ 0 set errormessage="Unable to delete directory.                       "
 @if %ERRORLEVEL% NEQ 0 goto errormsg
+
+
+@set ofile=cf-logs.%ts%.txt
+
+@rem $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+@rem $$                          OUTPUT                             $$
+@rem $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+@call rmvhdrs %tempfile% %ofile%
+@if %ERRORLEVEL% NEQ 0 set errormessage="Unable to generate output file.                   "
+@if %ERRORLEVEL% NEQ 0 goto errormsg
+
+@rem $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+@del %tempfile% 
+@if %ERRORLEVEL% NEQ 0 set errormessage="Unable to delete file.                            "
+@if %ERRORLEVEL% NEQ 0 goto errormsg
+
+
 
 @rem job finished. Time to rest!
 @rem ----------------------------
