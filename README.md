@@ -1,5 +1,5 @@
 <p align="center"> 
-  <img src="/resource/images/cf-loggetter-logo-small.png">
+  <img src="https://github.com/shazic/CF-LogGetter/blob/master/resource/images/cf-loggetter-logo-small.png">
 </p>  
 
 # CF-LogGetter
